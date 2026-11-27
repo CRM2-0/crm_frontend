@@ -1,0 +1,1 @@
+import{j as e,P as r,B as i,T as o}from"./index-C89otKt8.js";function p({title:s,action:t,children:a,className:n=""}){return e.jsxs(r,{variant:"outlined",className:`min-w-0 rounded-lg p-3 sm:p-4 ${n}`,children:[e.jsxs(i,{className:"mb-3 flex items-center justify-between gap-2",children:[e.jsx(o,{variant:"subtitle2",fontWeight:700,children:s}),t]}),a]})}export{p as R};

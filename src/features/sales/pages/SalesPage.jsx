@@ -1,0 +1,1287 @@
+import { useMemo, useState } from "react";
+import { Button, Chip, Grid2, Typography } from "@mui/material";
+import AddRoundedIcon from "@mui/icons-material/AddRounded";
+import { Link } from "react-router-dom";
+import PageHeader from "@/components/common/PageHeader";
+import MetricCard from "@/components/common/MetricCard";
+import ReportPanel from "@/components/common/ReportPanel";
+import { PerformanceBars } from "@/components/common/BarChart";
+import TableComponent from "@/components/table/TableComponent";
+import InputComponent from "@/components/form/InputComponent";
+import DropDown from "@/components/form/DropDown";
+
+const demoCalls = [
+  {
+    id: 1,
+    date: "24 Nov 2026",
+    time: "10:00 AM",
+    customer: "S. Sumathi",
+    purpose: "Pending dues",
+    contact: "Call",
+    chit: "MCSK/2025/0002",
+    phone: "+91 98765 67890",
+    status: "Pending",
+  },
+  {
+    id: 2,
+    date: "24 Nov 2026",
+    time: "11:30 AM",
+    customer: "K. Ramesh",
+    purpose: "Renewal opportunity",
+    contact: "Visit",
+    chit: "MFC-01",
+    phone: "+91 98765 65432",
+    status: "Completed",
+  },
+  {
+    id: 3,
+    date: "25 Nov 2026",
+    time: "09:30 AM",
+    customer: "A. Selvan",
+    purpose: "Application follow-up",
+    contact: "Call",
+    chit: "MCSK/2026/0004",
+    phone: "+91 98765 61234",
+    status: "Pending",
+  },
+  {
+    id: 4,
+    date: "25 Nov 2026",
+    time: "02:00 PM",
+    customer: "P. Kumar",
+    purpose: "Document collection",
+    contact: "Visit",
+    chit: "MFC-12",
+    phone: "+91 98765 69876",
+    status: "Pending",
+  },
+  {
+    id: 5,
+    date: "26 Nov 2026",
+    time: "03:00 PM",
+    customer: "R. Devi",
+    purpose: "Payment reminder",
+    contact: "Call",
+    chit: "MCSK/2025/0018",
+    phone: "+91 98765 62587",
+    status: "Completed",
+  },
+  {
+    id: 6,
+    date: "26 Nov 2026",
+    time: "04:15 PM",
+    customer: "M. Lakshmi",
+    purpose: "Installment reminder",
+    contact: "Call",
+    chit: "MCSK/2025/0021",
+    phone: "+91 98765 61128",
+    status: "Pending",
+  },
+  {
+    id: 7,
+    date: "27 Nov 2026",
+    time: "09:00 AM",
+    customer: "V. Prakash",
+    purpose: "Document collection",
+    contact: "Visit",
+    chit: "MFC-08",
+    phone: "+91 98765 60314",
+    status: "Pending",
+  },
+  {
+    id: 8,
+    date: "27 Nov 2026",
+    time: "11:00 AM",
+    customer: "J. Meena",
+    purpose: "Application follow-up",
+    contact: "Call",
+    chit: "MCSK/2026/0011",
+    phone: "+91 98765 64321",
+    status: "Completed",
+  },
+  {
+    id: 9,
+    date: "27 Nov 2026",
+    time: "02:30 PM",
+    customer: "D. Arjun",
+    purpose: "Renewal opportunity",
+    contact: "Visit",
+    chit: "MFC-15",
+    phone: "+91 98765 67452",
+    status: "Pending",
+  },
+  {
+    id: 10,
+    date: "28 Nov 2026",
+    time: "10:30 AM",
+    customer: "R. Kavitha",
+    purpose: "Payment reminder",
+    contact: "Call",
+    chit: "MCSK/2025/0030",
+    phone: "+91 98765 69841",
+    status: "Pending",
+  },
+  {
+    id: 11,
+    date: "28 Nov 2026",
+    time: "12:00 PM",
+    customer: "T. Suresh",
+    purpose: "Application follow-up",
+    contact: "Visit",
+    chit: "MFC-22",
+    phone: "+91 98765 63210",
+    status: "Completed",
+  },
+  {
+    id: 12,
+    date: "28 Nov 2026",
+    time: "03:30 PM",
+    customer: "P. Nandhini",
+    purpose: "Pending dues",
+    contact: "Call",
+    chit: "MCSK/2025/0014",
+    phone: "+91 98765 68720",
+    status: "Pending",
+  },
+  {
+    id: 13,
+    date: "29 Nov 2026",
+    time: "09:45 AM",
+    customer: "K. Senthil",
+    purpose: "Document collection",
+    contact: "Visit",
+    chit: "MFC-04",
+    phone: "+91 98765 61289",
+    status: "Pending",
+  },
+  {
+    id: 14,
+    date: "29 Nov 2026",
+    time: "01:15 PM",
+    customer: "A. Priya",
+    purpose: "Installment reminder",
+    contact: "Call",
+    chit: "MCSK/2026/0008",
+    phone: "+91 98765 67109",
+    status: "Completed",
+  },
+  {
+    id: 15,
+    date: "30 Nov 2026",
+    time: "10:00 AM",
+    customer: "N. Babu",
+    purpose: "Renewal opportunity",
+    contact: "Visit",
+    chit: "MFC-19",
+    phone: "+91 98765 63478",
+    status: "Pending",
+  },
+  {
+    id: 16,
+    date: "30 Nov 2026",
+    time: "02:15 PM",
+    customer: "L. Geetha",
+    purpose: "Payment reminder",
+    contact: "Call",
+    chit: "MCSK/2025/0026",
+    phone: "+91 98765 64930",
+    status: "Pending",
+  },
+  {
+    id: 17,
+    date: "01 Dec 2026",
+    time: "11:30 AM",
+    customer: "C. Murugan",
+    purpose: "Application follow-up",
+    contact: "Visit",
+    chit: "MFC-11",
+    phone: "+91 98765 62217",
+    status: "Completed",
+  },
+  {
+    id: 18,
+    date: "01 Dec 2026",
+    time: "04:00 PM",
+    customer: "S. Revathi",
+    purpose: "Pending dues",
+    contact: "Call",
+    chit: "MCSK/2025/0034",
+    phone: "+91 98765 65028",
+    status: "Pending",
+  },
+  {
+    id: 19,
+    date: "02 Dec 2026",
+    time: "09:30 AM",
+    customer: "B. Karthik",
+    purpose: "Document collection",
+    contact: "Visit",
+    chit: "MFC-27",
+    phone: "+91 98765 68814",
+    status: "Pending",
+  },
+  {
+    id: 20,
+    date: "02 Dec 2026",
+    time: "01:00 PM",
+    customer: "P. Shanthi",
+    purpose: "Installment reminder",
+    contact: "Call",
+    chit: "MCSK/2026/0016",
+    phone: "+91 98765 61945",
+    status: "Completed",
+  },
+  {
+    id: 1,
+    date: "24 Nov 2026",
+    time: "10:00 AM",
+    customer: "S. Sumathi",
+    purpose: "Pending dues",
+    contact: "Call",
+    chit: "MCSK/2025/0002",
+    phone: "+91 98765 67890",
+    status: "Pending",
+  },
+  {
+    id: 2,
+    date: "24 Nov 2026",
+    time: "11:30 AM",
+    customer: "K. Ramesh",
+    purpose: "Renewal opportunity",
+    contact: "Visit",
+    chit: "MFC-01",
+    phone: "+91 98765 65432",
+    status: "Completed",
+  },
+  {
+    id: 3,
+    date: "25 Nov 2026",
+    time: "09:30 AM",
+    customer: "A. Selvan",
+    purpose: "Application follow-up",
+    contact: "Call",
+    chit: "MCSK/2026/0004",
+    phone: "+91 98765 61234",
+    status: "Pending",
+  },
+  {
+    id: 4,
+    date: "25 Nov 2026",
+    time: "02:00 PM",
+    customer: "P. Kumar",
+    purpose: "Document collection",
+    contact: "Visit",
+    chit: "MFC-12",
+    phone: "+91 98765 69876",
+    status: "Pending",
+  },
+  {
+    id: 5,
+    date: "26 Nov 2026",
+    time: "03:00 PM",
+    customer: "R. Devi",
+    purpose: "Payment reminder",
+    contact: "Call",
+    chit: "MCSK/2025/0018",
+    phone: "+91 98765 62587",
+    status: "Completed",
+  },
+  {
+    id: 6,
+    date: "26 Nov 2026",
+    time: "04:15 PM",
+    customer: "M. Lakshmi",
+    purpose: "Installment reminder",
+    contact: "Call",
+    chit: "MCSK/2025/0021",
+    phone: "+91 98765 61128",
+    status: "Pending",
+  },
+  {
+    id: 7,
+    date: "27 Nov 2026",
+    time: "09:00 AM",
+    customer: "V. Prakash",
+    purpose: "Document collection",
+    contact: "Visit",
+    chit: "MFC-08",
+    phone: "+91 98765 60314",
+    status: "Pending",
+  },
+  {
+    id: 8,
+    date: "27 Nov 2026",
+    time: "11:00 AM",
+    customer: "J. Meena",
+    purpose: "Application follow-up",
+    contact: "Call",
+    chit: "MCSK/2026/0011",
+    phone: "+91 98765 64321",
+    status: "Completed",
+  },
+  {
+    id: 9,
+    date: "27 Nov 2026",
+    time: "02:30 PM",
+    customer: "D. Arjun",
+    purpose: "Renewal opportunity",
+    contact: "Visit",
+    chit: "MFC-15",
+    phone: "+91 98765 67452",
+    status: "Pending",
+  },
+  {
+    id: 10,
+    date: "28 Nov 2026",
+    time: "10:30 AM",
+    customer: "R. Kavitha",
+    purpose: "Payment reminder",
+    contact: "Call",
+    chit: "MCSK/2025/0030",
+    phone: "+91 98765 69841",
+    status: "Pending",
+  },
+  {
+    id: 11,
+    date: "28 Nov 2026",
+    time: "12:00 PM",
+    customer: "T. Suresh",
+    purpose: "Application follow-up",
+    contact: "Visit",
+    chit: "MFC-22",
+    phone: "+91 98765 63210",
+    status: "Completed",
+  },
+  {
+    id: 12,
+    date: "28 Nov 2026",
+    time: "03:30 PM",
+    customer: "P. Nandhini",
+    purpose: "Pending dues",
+    contact: "Call",
+    chit: "MCSK/2025/0014",
+    phone: "+91 98765 68720",
+    status: "Pending",
+  },
+  {
+    id: 13,
+    date: "29 Nov 2026",
+    time: "09:45 AM",
+    customer: "K. Senthil",
+    purpose: "Document collection",
+    contact: "Visit",
+    chit: "MFC-04",
+    phone: "+91 98765 61289",
+    status: "Pending",
+  },
+  {
+    id: 14,
+    date: "29 Nov 2026",
+    time: "01:15 PM",
+    customer: "A. Priya",
+    purpose: "Installment reminder",
+    contact: "Call",
+    chit: "MCSK/2026/0008",
+    phone: "+91 98765 67109",
+    status: "Completed",
+  },
+  {
+    id: 15,
+    date: "30 Nov 2026",
+    time: "10:00 AM",
+    customer: "N. Babu",
+    purpose: "Renewal opportunity",
+    contact: "Visit",
+    chit: "MFC-19",
+    phone: "+91 98765 63478",
+    status: "Pending",
+  },
+  {
+    id: 16,
+    date: "30 Nov 2026",
+    time: "02:15 PM",
+    customer: "L. Geetha",
+    purpose: "Payment reminder",
+    contact: "Call",
+    chit: "MCSK/2025/0026",
+    phone: "+91 98765 64930",
+    status: "Pending",
+  },
+  {
+    id: 17,
+    date: "01 Dec 2026",
+    time: "11:30 AM",
+    customer: "C. Murugan",
+    purpose: "Application follow-up",
+    contact: "Visit",
+    chit: "MFC-11",
+    phone: "+91 98765 62217",
+    status: "Completed",
+  },
+  {
+    id: 18,
+    date: "01 Dec 2026",
+    time: "04:00 PM",
+    customer: "S. Revathi",
+    purpose: "Pending dues",
+    contact: "Call",
+    chit: "MCSK/2025/0034",
+    phone: "+91 98765 65028",
+    status: "Pending",
+  },
+  {
+    id: 19,
+    date: "02 Dec 2026",
+    time: "09:30 AM",
+    customer: "B. Karthik",
+    purpose: "Document collection",
+    contact: "Visit",
+    chit: "MFC-27",
+    phone: "+91 98765 68814",
+    status: "Pending",
+  },
+  {
+    id: 20,
+    date: "02 Dec 2026",
+    time: "01:00 PM",
+    customer: "P. Shanthi",
+    purpose: "Installment reminder",
+    contact: "Call",
+    chit: "MCSK/2026/0016",
+    phone: "+91 98765 61945",
+    status: "Completed",
+  },
+  {
+    id: 1,
+    date: "24 Nov 2026",
+    time: "10:00 AM",
+    customer: "S. Sumathi",
+    purpose: "Pending dues",
+    contact: "Call",
+    chit: "MCSK/2025/0002",
+    phone: "+91 98765 67890",
+    status: "Pending",
+  },
+  {
+    id: 2,
+    date: "24 Nov 2026",
+    time: "11:30 AM",
+    customer: "K. Ramesh",
+    purpose: "Renewal opportunity",
+    contact: "Visit",
+    chit: "MFC-01",
+    phone: "+91 98765 65432",
+    status: "Completed",
+  },
+  {
+    id: 3,
+    date: "25 Nov 2026",
+    time: "09:30 AM",
+    customer: "A. Selvan",
+    purpose: "Application follow-up",
+    contact: "Call",
+    chit: "MCSK/2026/0004",
+    phone: "+91 98765 61234",
+    status: "Pending",
+  },
+  {
+    id: 4,
+    date: "25 Nov 2026",
+    time: "02:00 PM",
+    customer: "P. Kumar",
+    purpose: "Document collection",
+    contact: "Visit",
+    chit: "MFC-12",
+    phone: "+91 98765 69876",
+    status: "Pending",
+  },
+  {
+    id: 5,
+    date: "26 Nov 2026",
+    time: "03:00 PM",
+    customer: "R. Devi",
+    purpose: "Payment reminder",
+    contact: "Call",
+    chit: "MCSK/2025/0018",
+    phone: "+91 98765 62587",
+    status: "Completed",
+  },
+  {
+    id: 6,
+    date: "26 Nov 2026",
+    time: "04:15 PM",
+    customer: "M. Lakshmi",
+    purpose: "Installment reminder",
+    contact: "Call",
+    chit: "MCSK/2025/0021",
+    phone: "+91 98765 61128",
+    status: "Pending",
+  },
+  {
+    id: 7,
+    date: "27 Nov 2026",
+    time: "09:00 AM",
+    customer: "V. Prakash",
+    purpose: "Document collection",
+    contact: "Visit",
+    chit: "MFC-08",
+    phone: "+91 98765 60314",
+    status: "Pending",
+  },
+  {
+    id: 8,
+    date: "27 Nov 2026",
+    time: "11:00 AM",
+    customer: "J. Meena",
+    purpose: "Application follow-up",
+    contact: "Call",
+    chit: "MCSK/2026/0011",
+    phone: "+91 98765 64321",
+    status: "Completed",
+  },
+  {
+    id: 9,
+    date: "27 Nov 2026",
+    time: "02:30 PM",
+    customer: "D. Arjun",
+    purpose: "Renewal opportunity",
+    contact: "Visit",
+    chit: "MFC-15",
+    phone: "+91 98765 67452",
+    status: "Pending",
+  },
+  {
+    id: 10,
+    date: "28 Nov 2026",
+    time: "10:30 AM",
+    customer: "R. Kavitha",
+    purpose: "Payment reminder",
+    contact: "Call",
+    chit: "MCSK/2025/0030",
+    phone: "+91 98765 69841",
+    status: "Pending",
+  },
+  {
+    id: 11,
+    date: "28 Nov 2026",
+    time: "12:00 PM",
+    customer: "T. Suresh",
+    purpose: "Application follow-up",
+    contact: "Visit",
+    chit: "MFC-22",
+    phone: "+91 98765 63210",
+    status: "Completed",
+  },
+  {
+    id: 12,
+    date: "28 Nov 2026",
+    time: "03:30 PM",
+    customer: "P. Nandhini",
+    purpose: "Pending dues",
+    contact: "Call",
+    chit: "MCSK/2025/0014",
+    phone: "+91 98765 68720",
+    status: "Pending",
+  },
+  {
+    id: 13,
+    date: "29 Nov 2026",
+    time: "09:45 AM",
+    customer: "K. Senthil",
+    purpose: "Document collection",
+    contact: "Visit",
+    chit: "MFC-04",
+    phone: "+91 98765 61289",
+    status: "Pending",
+  },
+  {
+    id: 14,
+    date: "29 Nov 2026",
+    time: "01:15 PM",
+    customer: "A. Priya",
+    purpose: "Installment reminder",
+    contact: "Call",
+    chit: "MCSK/2026/0008",
+    phone: "+91 98765 67109",
+    status: "Completed",
+  },
+  {
+    id: 15,
+    date: "30 Nov 2026",
+    time: "10:00 AM",
+    customer: "N. Babu",
+    purpose: "Renewal opportunity",
+    contact: "Visit",
+    chit: "MFC-19",
+    phone: "+91 98765 63478",
+    status: "Pending",
+  },
+  {
+    id: 16,
+    date: "30 Nov 2026",
+    time: "02:15 PM",
+    customer: "L. Geetha",
+    purpose: "Payment reminder",
+    contact: "Call",
+    chit: "MCSK/2025/0026",
+    phone: "+91 98765 64930",
+    status: "Pending",
+  },
+  {
+    id: 17,
+    date: "01 Dec 2026",
+    time: "11:30 AM",
+    customer: "C. Murugan",
+    purpose: "Application follow-up",
+    contact: "Visit",
+    chit: "MFC-11",
+    phone: "+91 98765 62217",
+    status: "Completed",
+  },
+  {
+    id: 18,
+    date: "01 Dec 2026",
+    time: "04:00 PM",
+    customer: "S. Revathi",
+    purpose: "Pending dues",
+    contact: "Call",
+    chit: "MCSK/2025/0034",
+    phone: "+91 98765 65028",
+    status: "Pending",
+  },
+  {
+    id: 19,
+    date: "02 Dec 2026",
+    time: "09:30 AM",
+    customer: "B. Karthik",
+    purpose: "Document collection",
+    contact: "Visit",
+    chit: "MFC-27",
+    phone: "+91 98765 68814",
+    status: "Pending",
+  },
+  {
+    id: 20,
+    date: "02 Dec 2026",
+    time: "01:00 PM",
+    customer: "P. Shanthi",
+    purpose: "Installment reminder",
+    contact: "Call",
+    chit: "MCSK/2026/0016",
+    phone: "+91 98765 61945",
+    status: "Completed",
+  },
+  {
+    id: 1,
+    date: "24 Nov 2026",
+    time: "10:00 AM",
+    customer: "S. Sumathi",
+    purpose: "Pending dues",
+    contact: "Call",
+    chit: "MCSK/2025/0002",
+    phone: "+91 98765 67890",
+    status: "Pending",
+  },
+  {
+    id: 2,
+    date: "24 Nov 2026",
+    time: "11:30 AM",
+    customer: "K. Ramesh",
+    purpose: "Renewal opportunity",
+    contact: "Visit",
+    chit: "MFC-01",
+    phone: "+91 98765 65432",
+    status: "Completed",
+  },
+  {
+    id: 3,
+    date: "25 Nov 2026",
+    time: "09:30 AM",
+    customer: "A. Selvan",
+    purpose: "Application follow-up",
+    contact: "Call",
+    chit: "MCSK/2026/0004",
+    phone: "+91 98765 61234",
+    status: "Pending",
+  },
+  {
+    id: 4,
+    date: "25 Nov 2026",
+    time: "02:00 PM",
+    customer: "P. Kumar",
+    purpose: "Document collection",
+    contact: "Visit",
+    chit: "MFC-12",
+    phone: "+91 98765 69876",
+    status: "Pending",
+  },
+  {
+    id: 5,
+    date: "26 Nov 2026",
+    time: "03:00 PM",
+    customer: "R. Devi",
+    purpose: "Payment reminder",
+    contact: "Call",
+    chit: "MCSK/2025/0018",
+    phone: "+91 98765 62587",
+    status: "Completed",
+  },
+  {
+    id: 6,
+    date: "26 Nov 2026",
+    time: "04:15 PM",
+    customer: "M. Lakshmi",
+    purpose: "Installment reminder",
+    contact: "Call",
+    chit: "MCSK/2025/0021",
+    phone: "+91 98765 61128",
+    status: "Pending",
+  },
+  {
+    id: 7,
+    date: "27 Nov 2026",
+    time: "09:00 AM",
+    customer: "V. Prakash",
+    purpose: "Document collection",
+    contact: "Visit",
+    chit: "MFC-08",
+    phone: "+91 98765 60314",
+    status: "Pending",
+  },
+  {
+    id: 8,
+    date: "27 Nov 2026",
+    time: "11:00 AM",
+    customer: "J. Meena",
+    purpose: "Application follow-up",
+    contact: "Call",
+    chit: "MCSK/2026/0011",
+    phone: "+91 98765 64321",
+    status: "Completed",
+  },
+  {
+    id: 9,
+    date: "27 Nov 2026",
+    time: "02:30 PM",
+    customer: "D. Arjun",
+    purpose: "Renewal opportunity",
+    contact: "Visit",
+    chit: "MFC-15",
+    phone: "+91 98765 67452",
+    status: "Pending",
+  },
+  {
+    id: 10,
+    date: "28 Nov 2026",
+    time: "10:30 AM",
+    customer: "R. Kavitha",
+    purpose: "Payment reminder",
+    contact: "Call",
+    chit: "MCSK/2025/0030",
+    phone: "+91 98765 69841",
+    status: "Pending",
+  },
+  {
+    id: 11,
+    date: "28 Nov 2026",
+    time: "12:00 PM",
+    customer: "T. Suresh",
+    purpose: "Application follow-up",
+    contact: "Visit",
+    chit: "MFC-22",
+    phone: "+91 98765 63210",
+    status: "Completed",
+  },
+  {
+    id: 12,
+    date: "28 Nov 2026",
+    time: "03:30 PM",
+    customer: "P. Nandhini",
+    purpose: "Pending dues",
+    contact: "Call",
+    chit: "MCSK/2025/0014",
+    phone: "+91 98765 68720",
+    status: "Pending",
+  },
+  {
+    id: 13,
+    date: "29 Nov 2026",
+    time: "09:45 AM",
+    customer: "K. Senthil",
+    purpose: "Document collection",
+    contact: "Visit",
+    chit: "MFC-04",
+    phone: "+91 98765 61289",
+    status: "Pending",
+  },
+  {
+    id: 14,
+    date: "29 Nov 2026",
+    time: "01:15 PM",
+    customer: "A. Priya",
+    purpose: "Installment reminder",
+    contact: "Call",
+    chit: "MCSK/2026/0008",
+    phone: "+91 98765 67109",
+    status: "Completed",
+  },
+  {
+    id: 15,
+    date: "30 Nov 2026",
+    time: "10:00 AM",
+    customer: "N. Babu",
+    purpose: "Renewal opportunity",
+    contact: "Visit",
+    chit: "MFC-19",
+    phone: "+91 98765 63478",
+    status: "Pending",
+  },
+  {
+    id: 16,
+    date: "30 Nov 2026",
+    time: "02:15 PM",
+    customer: "L. Geetha",
+    purpose: "Payment reminder",
+    contact: "Call",
+    chit: "MCSK/2025/0026",
+    phone: "+91 98765 64930",
+    status: "Pending",
+  },
+  {
+    id: 17,
+    date: "01 Dec 2026",
+    time: "11:30 AM",
+    customer: "C. Murugan",
+    purpose: "Application follow-up",
+    contact: "Visit",
+    chit: "MFC-11",
+    phone: "+91 98765 62217",
+    status: "Completed",
+  },
+  {
+    id: 18,
+    date: "01 Dec 2026",
+    time: "04:00 PM",
+    customer: "S. Revathi",
+    purpose: "Pending dues",
+    contact: "Call",
+    chit: "MCSK/2025/0034",
+    phone: "+91 98765 65028",
+    status: "Pending",
+  },
+  {
+    id: 19,
+    date: "02 Dec 2026",
+    time: "09:30 AM",
+    customer: "B. Karthik",
+    purpose: "Document collection",
+    contact: "Visit",
+    chit: "MFC-27",
+    phone: "+91 98765 68814",
+    status: "Pending",
+  },
+  {
+    id: 20,
+    date: "02 Dec 2026",
+    time: "01:00 PM",
+    customer: "P. Shanthi",
+    purpose: "Installment reminder",
+    contact: "Call",
+    chit: "MCSK/2026/0016",
+    phone: "+91 98765 61945",
+    status: "Completed",
+  },
+  {
+    id: 1,
+    date: "24 Nov 2026",
+    time: "10:00 AM",
+    customer: "S. Sumathi",
+    purpose: "Pending dues",
+    contact: "Call",
+    chit: "MCSK/2025/0002",
+    phone: "+91 98765 67890",
+    status: "Pending",
+  },
+  {
+    id: 2,
+    date: "24 Nov 2026",
+    time: "11:30 AM",
+    customer: "K. Ramesh",
+    purpose: "Renewal opportunity",
+    contact: "Visit",
+    chit: "MFC-01",
+    phone: "+91 98765 65432",
+    status: "Completed",
+  },
+  {
+    id: 3,
+    date: "25 Nov 2026",
+    time: "09:30 AM",
+    customer: "A. Selvan",
+    purpose: "Application follow-up",
+    contact: "Call",
+    chit: "MCSK/2026/0004",
+    phone: "+91 98765 61234",
+    status: "Pending",
+  },
+  {
+    id: 4,
+    date: "25 Nov 2026",
+    time: "02:00 PM",
+    customer: "P. Kumar",
+    purpose: "Document collection",
+    contact: "Visit",
+    chit: "MFC-12",
+    phone: "+91 98765 69876",
+    status: "Pending",
+  },
+  {
+    id: 5,
+    date: "26 Nov 2026",
+    time: "03:00 PM",
+    customer: "R. Devi",
+    purpose: "Payment reminder",
+    contact: "Call",
+    chit: "MCSK/2025/0018",
+    phone: "+91 98765 62587",
+    status: "Completed",
+  },
+  {
+    id: 6,
+    date: "26 Nov 2026",
+    time: "04:15 PM",
+    customer: "M. Lakshmi",
+    purpose: "Installment reminder",
+    contact: "Call",
+    chit: "MCSK/2025/0021",
+    phone: "+91 98765 61128",
+    status: "Pending",
+  },
+  {
+    id: 7,
+    date: "27 Nov 2026",
+    time: "09:00 AM",
+    customer: "V. Prakash",
+    purpose: "Document collection",
+    contact: "Visit",
+    chit: "MFC-08",
+    phone: "+91 98765 60314",
+    status: "Pending",
+  },
+  {
+    id: 8,
+    date: "27 Nov 2026",
+    time: "11:00 AM",
+    customer: "J. Meena",
+    purpose: "Application follow-up",
+    contact: "Call",
+    chit: "MCSK/2026/0011",
+    phone: "+91 98765 64321",
+    status: "Completed",
+  },
+  {
+    id: 9,
+    date: "27 Nov 2026",
+    time: "02:30 PM",
+    customer: "D. Arjun",
+    purpose: "Renewal opportunity",
+    contact: "Visit",
+    chit: "MFC-15",
+    phone: "+91 98765 67452",
+    status: "Pending",
+  },
+  {
+    id: 10,
+    date: "28 Nov 2026",
+    time: "10:30 AM",
+    customer: "R. Kavitha",
+    purpose: "Payment reminder",
+    contact: "Call",
+    chit: "MCSK/2025/0030",
+    phone: "+91 98765 69841",
+    status: "Pending",
+  },
+  {
+    id: 11,
+    date: "28 Nov 2026",
+    time: "12:00 PM",
+    customer: "T. Suresh",
+    purpose: "Application follow-up",
+    contact: "Visit",
+    chit: "MFC-22",
+    phone: "+91 98765 63210",
+    status: "Completed",
+  },
+  {
+    id: 12,
+    date: "28 Nov 2026",
+    time: "03:30 PM",
+    customer: "P. Nandhini",
+    purpose: "Pending dues",
+    contact: "Call",
+    chit: "MCSK/2025/0014",
+    phone: "+91 98765 68720",
+    status: "Pending",
+  },
+  {
+    id: 13,
+    date: "29 Nov 2026",
+    time: "09:45 AM",
+    customer: "K. Senthil",
+    purpose: "Document collection",
+    contact: "Visit",
+    chit: "MFC-04",
+    phone: "+91 98765 61289",
+    status: "Pending",
+  },
+  {
+    id: 14,
+    date: "29 Nov 2026",
+    time: "01:15 PM",
+    customer: "A. Priya",
+    purpose: "Installment reminder",
+    contact: "Call",
+    chit: "MCSK/2026/0008",
+    phone: "+91 98765 67109",
+    status: "Completed",
+  },
+  {
+    id: 15,
+    date: "30 Nov 2026",
+    time: "10:00 AM",
+    customer: "N. Babu",
+    purpose: "Renewal opportunity",
+    contact: "Visit",
+    chit: "MFC-19",
+    phone: "+91 98765 63478",
+    status: "Pending",
+  },
+  {
+    id: 16,
+    date: "30 Nov 2026",
+    time: "02:15 PM",
+    customer: "L. Geetha",
+    purpose: "Payment reminder",
+    contact: "Call",
+    chit: "MCSK/2025/0026",
+    phone: "+91 98765 64930",
+    status: "Pending",
+  },
+  {
+    id: 17,
+    date: "01 Dec 2026",
+    time: "11:30 AM",
+    customer: "C. Murugan",
+    purpose: "Application follow-up",
+    contact: "Visit",
+    chit: "MFC-11",
+    phone: "+91 98765 62217",
+    status: "Completed",
+  },
+  {
+    id: 18,
+    date: "01 Dec 2026",
+    time: "04:00 PM",
+    customer: "S. Revathi",
+    purpose: "Pending dues",
+    contact: "Call",
+    chit: "MCSK/2025/0034",
+    phone: "+91 98765 65028",
+    status: "Pending",
+  },
+  {
+    id: 19,
+    date: "02 Dec 2026",
+    time: "09:30 AM",
+    customer: "B. Karthik",
+    purpose: "Document collection",
+    contact: "Visit",
+    chit: "MFC-27",
+    phone: "+91 98765 68814",
+    status: "Pending",
+  },
+  {
+    id: 20,
+    date: "02 Dec 2026",
+    time: "01:00 PM",
+    customer: "P. Shanthi",
+    purpose: "Installment reminder",
+    contact: "Call",
+    chit: "MCSK/2026/0016",
+    phone: "+91 98765 61945",
+    status: "Completed",
+  },
+];
+
+export default function SalesPage() {
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
+  const [contact, setContact] = useState("");
+  const [search, setSearch] = useState("");
+  const rows = useMemo(
+    () =>
+      demoCalls.filter(
+        (row) =>
+          (!contact || row.contact === contact) &&
+          `${row.customer} ${row.purpose}`
+            .toLowerCase()
+            .includes(search.toLowerCase()),
+      ),
+    [contact, search],
+  );
+  const columns = [
+    {
+      key: "sno",
+      label: "S.no",
+      render: (_, i) => (page - 1) * pageSize + i + 1,
+    },
+    { key: "date", label: "Date" },
+    { key: "time", label: "Time" },
+    { key: "customer", label: "Customer name" },
+    { key: "purpose", label: "Purpose" },
+    { key: "contact", label: "Contact type" },
+    { key: "chit", label: "Chit ID" },
+    { key: "phone", label: "Mobile number" },
+    {
+      key: "status",
+      label: "Status",
+      render: (row) => (
+        <Chip
+          size="small"
+          label={row.status}
+          color={row.status === "Completed" ? "success" : "warning"}
+        />
+      ),
+    },
+  ];
+  return (
+    <>
+      <PageHeader
+        title="Sales & Follow-up"
+        action={
+          <Button
+            component={Link}
+            to="/sales/canvasser-follow-up"
+            variant="contained"
+            startIcon={<AddRoundedIcon />}
+          >
+            Canvasser Follow-up
+          </Button>
+        }
+        showHeaderActions
+      />
+      <Grid2 container spacing={1.5} className="mb-4">
+        <Grid2 size={{ xs: 6, md: 3 }}>
+          <MetricCard
+            label="Total collection"
+            value="₹58.2L"
+            accent="#27866b"
+          />
+        </Grid2>
+        <Grid2 size={{ xs: 6, md: 3 }}>
+          <MetricCard label="Total pending" value="₹44L" accent="#d98e20" />
+        </Grid2>
+        <Grid2 size={{ xs: 6, md: 3 }}>
+          <MetricCard
+            label="Completed visits & calls"
+            value="48,712"
+            icon={AddRoundedIcon}
+          />
+        </Grid2>
+        <Grid2 size={{ xs: 6, md: 3 }}>
+          <MetricCard
+            label="Pending visits & calls"
+            value="8,712"
+            accent="#d98e20"
+          />
+        </Grid2>
+      </Grid2>
+      <Grid2 container spacing={1.5} className="mb-4">
+        <Grid2 size={{ xs: 12, md: 4 }}>
+          <ReportPanel title="My performance overview">
+            <PerformanceBars
+              items={[
+                { label: "Calls", value: 70 },
+                { label: "Visits", value: 84 },
+                { label: "Applications", value: 62 },
+                { label: "Cancelled", value: 28 },
+              ]}
+              height={170}
+            />
+          </ReportPanel>
+        </Grid2>
+        <Grid2 size={{ xs: 12, md: 4 }}>
+          <ReportPanel title="My target vs achievements">
+            <PerformanceBars
+              items={[
+                { label: "Target", value: 80 },
+                { label: "Achievements", value: 64 },
+                { label: "Remaining", value: 36 },
+              ]}
+              height={170}
+            />
+          </ReportPanel>
+        </Grid2>
+        <Grid2 size={{ xs: 12, md: 4 }}>
+          <ReportPanel title="My branch performance">
+            <PerformanceBars
+              items={[
+                { label: "Chennai", value: 86, compare: 48 },
+                { label: "Salem", value: 72, compare: 39 },
+                { label: "Trichy", value: 64, compare: 34 },
+              ]}
+              height={170}
+            />
+          </ReportPanel>
+        </Grid2>
+      </Grid2>
+      <ReportPanel
+        title="Follow-up records"
+        action={
+          <InputComponent
+            size="small"
+            label="Search records"
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(1);
+            }}
+          />
+        }
+      >
+        <div className="mb-3 flex flex-wrap items-center gap-2">
+          <DropDown
+            label="Contact type"
+            name="contact"
+            value={contact}
+            onChange={(e) => {
+              setContact(e.target.value);
+              setPage(1);
+            }}
+            data={[
+              { name: "All contacts", value: "" },
+              { name: "Call", value: "Call" },
+              { name: "Visit", value: "Visit" },
+            ]}
+            valueKey="value"
+            sx={{ minWidth: 145 }}
+          />
+          <Typography variant="caption" color="text.secondary">
+            Sample preview data
+          </Typography>
+        </div>
+        <TableComponent
+          columns={columns}
+          data={rows}
+          page={page}
+          pageSize={pageSize}
+          initialDataCount={rows.length}
+          onPageChange={setPage}
+          onPageSizeChange={setPageSize}
+          emptyMessage="No follow-up records match these filters."
+          minWidth={920}
+        />
+      </ReportPanel>
+    </>
+  );
+}
